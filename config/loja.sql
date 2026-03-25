@@ -16,6 +16,14 @@ SHOW TABLES;
 INSERT INTO Produtos (nome, descricao, quantidade, preco) VALUES
 ('Mouse', 'Mouse óptico USB', 50, 39.90),
 ('Teclado', 'Teclado mecânico', 20, 199.90),
-('Monitor', 'Monitor LED 24 polegadas', 10, 899.99);
+('Monitor', 'Monialunostor LED 24 polegadas', 10, 899.99);
 
 SELECT * FROM Produtos;
+use loja;
+select *from loja;
+
+alter table Produtos
+add column imagem varchar(255);
+
+select * from loja;
+

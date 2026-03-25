@@ -41,7 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["alterar"])) {
     <label>Preço</label>
     <input type="text" name= produto[preco]" value="<?= $a->preco ?> ">
 
-
+    <label for="fileToUpload">Selecionar Foto</label>
+    <input type="file"name="produto[fileToUpload]"id="fileToUpload"><br><br>
 
     <button name="atualizar">Atualizar</button>
 </form>

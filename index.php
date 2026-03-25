@@ -28,6 +28,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
 }
 
 
+
 ?>
 
 <!doctype html>
@@ -85,6 +86,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
         <td>Descrição</td>
         <td>Quantidade</td>
         <td>Preço</td>
+        <td>Imagem</td>
     </tr>
     <?php if($produtos) : ?>
         <?php foreach($produtos as $produto) : ?>
@@ -94,6 +96,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                 <td><?php echo $produto->descricao;?></td>
                 <td><?php echo $produto->quantidade;?></td>
                 <td><?php echo $produto->preco;?></td>
+                <td><img style="width: 20%" src="uploads/<?= $produto->imagem;?>"</td>
                 <td><a href="atualizar.php?alterar=<?= $produto->id ?>">Alterar</a></td>
                 <td><a href="index.php?excluir=<?= $produto->id ?>">Excluir</a></td>
 

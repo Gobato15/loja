@@ -37,13 +37,14 @@ Class produtos {
     }
 
     public function cadastrar(){
-        $sql = "INSERT INTO produtos (nome, descricao, quantidade, preco) VALUES(:nome, :descricao, :quantidade, :preco)";
+        $sql = "INSERT INTO produtos (nome, descricao, quantidade, preco, imagem) VALUES(:nome, :descricao, :quantidade, :preco,:imagem)";
 
         $stmt = $this->bd->prepare($sql);
         $stmt->bindParam(':nome', $this->nome, PDO::PARAM_STR);
         $stmt->bindParam(':descricao', $this->descricao, PDO::PARAM_STR);
         $stmt->bindParam(':quantidade', $this->quantidade, PDO::PARAM_STR);
         $stmt->bindParam(':preco', $this->preco, PDO::PARAM_STR);
+        $stmt->bindParam(":imagem", $this->img, PDO::PARAM_STR);
 
         if($stmt->execute()){
             return true;
