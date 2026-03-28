@@ -10,16 +10,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     if(isset($_POST["pesquisar"])){
         $valor = $_POST["pesquisar"];
         $tipo = $_POST["tipo"];
-
-        if($_SERVER["REQUEST_METHOD"] === "POST"){
-            if(isset($_POST["pesquisar"])){
-                $a = $controller->pesquisaProduto($_POST["pesquisar"], $_POST["tipo"]);
+        $a = $controller->pesquisaProduto($_POST["pesquisar"], $_POST["tipo"]);
             }
 
-        }
 
     }
-}
 
 if($_SERVER["REQUEST_METHOD"] === "GET"){
     if(isset($_GET["excluir"])){
@@ -96,9 +91,19 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                 <td><?php echo $produto->descricao;?></td>
                 <td><?php echo $produto->quantidade;?></td>
                 <td><?php echo $produto->preco;?></td>
-                <td><img style="width: 20%" src="uploads/<?= $produto->imagem;?>"</td>
+
+
+            <td>
+                <?php if(is_null($produto->imagem)): ?>
+                    <img style="width: 20%;" src="imagens/img_fail.jpg"> <!-- ✅ fallback -->
+                <?php else: ?>
+                    <img style="width: 20%;" src="uploads/<?= $produto->imagem ?>"> <!-- ✅ tag fechada -->
+
+                <?php endif; ?>
+            </td>
                 <td><a href="atualizar.php?alterar=<?= $produto->id ?>">Alterar</a></td>
                 <td><a href="index.php?excluir=<?= $produto->id ?>">Excluir</a></td>
+                <td><a href="ver.produtos.php?id=<?= $produto->id ?>">Visualizar</a></td>
 
             </tr>
         <?php endforeach; ?>
@@ -107,3 +112,4 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
 
 </body>
 </html>
+
