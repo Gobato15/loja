@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once("objetos/ProdutosController.php");
 
 $controller = new ProdutosController();
@@ -34,6 +35,14 @@ if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])){
 <?php else: ?>
     <img style="width: 20%;" src="uploads/<?= $a->imagem ?>"> <!-- ✅ tag fechada -->
 
+<?php endif; ?>
+
+<hr>
+<?php if(isset($_SESSION['funcao']) && strtolower($_SESSION['funcao']) === 'gerente'): ?>
+    <div style="margin-top: 20px;">
+        <a href="atualizar.php?alterar=<?= $a->id ?>" style="padding: 10px 15px; background: #2c5282; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">Alterar Produto</a>
+        <a href="index.php?excluir=<?= $a->id ?>" onclick="return confirm('Tem certeza que deseja excluir este produto?')" style="padding: 10px 15px; background: #e53e3e; color: white; text-decoration: none; border-radius: 5px;">Excluir Produto</a>
+    </div>
 <?php endif; ?>
 
 </body>

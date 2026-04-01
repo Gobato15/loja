@@ -1,12 +1,19 @@
 <?php
+ob_start();
+if(session_status() === PHP_SESSION_NONE) { session_start(); }
 include "objetos/FuncionarioController.php";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST["login"]) && isset($_POST["senha"])){
         $controller = new FuncionarioController();
+        // Assim como no padrão do ProdutosController do sistema, faz a chamada para o método de login 
+        // Lembre-se que você precisará criar o método login() dentro de FuncionarioController.php e do funcionario.php!
         $controller->login($_POST["login"], $_POST["senha"]);
+    } else {
+        echo "<script>alert('Preencha login e senha!');</script>";
     }
 }
+
 ?>
 
 <!doctype html>
@@ -14,7 +21,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ENTRAR - Loja</title>
+    <title>Login - Funcionário</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap');
         
@@ -29,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -90,7 +97,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         button {
             width: 100%;
             padding: 14px;
-            background: #2563eb;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 10px;
@@ -102,7 +109,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
 
         button:hover {
-            background: #1d4ed8;
+            background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
@@ -125,22 +132,21 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <body>
 
 <div class="login-card">
-    <h1>Entrar na Loja</h1>
-    <form method="POST" action="login.php">
+    <h1>Acesso Restrito</h1>
+    <form method="POST" action="loginfuncionario.php">
         <div class="form-group">
-            <label for="login">Login / E-mail</label>
-            <input type="text" id="login" name="login" placeholder="Seu acesso" required>
+            <label for="login">Login / Usuário</label>
+            <input type="text" id="login" name="login" placeholder="Digite seu login" required>
         </div>
         
         <div class="form-group">
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
         </div>
         
-        <button type="submit">Acessar Conta</button>
+        <button type="submit">Entrar no Sistema</button>
     </form>
-    <a href="index.php" class="back-link">← Voltar à Loja</a>
-    <a href="loginfuncionario.php" class="back-link" style="margin-top: 10px; color: #3b82f6;">Acesso para Funcionários</a>
+    <a href="index.php" class="back-link">← Voltar para a Loja</a>
 </div>
 
 </body>

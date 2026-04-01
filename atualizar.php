@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['usuario']) || strtolower($_SESSION['funcao']) !== 'gerente') {
+    header("Location: loginfuncionario.php");
+    exit();
+}
 include_once("objetos/ProdutosController.php");
 
 $controller = new produtosController();

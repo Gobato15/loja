@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// Barreira de autenticação: se não houver usuário logado, redireciona para login.php
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.php");
+    exit();
+}
 include_once"objetos/ProdutosController.php";
 
 $controller = new ProdutosController();
@@ -18,7 +25,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
 if($_SERVER["REQUEST_METHOD"] === "GET"){
     if(isset($_GET["excluir"])){
-        $a = $controller->excluirProduto($_GET["excluir"]);
+        if (isset($_SESSION['funcao']) && strtolower($_SESSION['funcao']) === 'gerente') {
+            $a = $controller->excluirProduto($_GET["excluir"]);
+        } else {
+            echo "<script>alert('Ação restrita apenas para gerentes.');</script>";
+        }
     }
 }
 
@@ -31,84 +42,163 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Loja</title>
+    <title>Loja de Informática - Home</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        /* Estilização da tabela  */
-        table,tr,td{
-            border: 1px solid black;
-            border-collapse: collapse;
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            background: #e2e8f0;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
         }
     </style>
 </head>
 <body>
 
-<h1>Loja de Informática</h1>
-<h2>Produtos</h2>
-<a href="cadastro.php">Cadastrar Produto</a>
+<div class="container">
+    <header>
+        <h1>Loja de Informática</h1>
+        
+        <?php if(isset($_SESSION['usuario'])): ?>
+            <div class="user-info">
+                <div>
+                    👤 Usuário: <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
+                    | Cargo: <span class="badge"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
+                </div>
+                <a href="logout.php" class="btn btn-view" style="padding: 5px 12px;">Sair (Logout)</a>
+            </div>
+        <?php endif; ?>
+    </header>
 
-<h3>Pesquisar Produto</h3>
-<form method="POST" action="index.php">
-    <label>ID</label>
-    <input type="text" name="pesquisar">
-    <select name="tipo">
-        <option value=id>ID</option>
-        <option value="nome">Nome</option>
-    </select>
-    <button>Pesquisar</button>
-</form>
+    <div class="nav-links">
+        <?php 
+        $funcao = strtolower($_SESSION['funcao'] ?? '');
+        if($funcao === 'gerente' || $funcao === 'técnico em eletrônica'): 
+        ?>
+            <a href="cadastro.php">➕ Cadastrar Produto</a>
+            <?php if($funcao === 'gerente'): ?>
+                <a href="painelgerenciamento.php">⚙️ Gerenciar Funcionários</a>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
 
-<table>
-    <tr>
-        <td>ID</td>
-        <td>Nome</td>
-    </tr>
-    <?php if($a) : ?>
-        <?php foreach($a as $produto) : ?>
-            <tr>
-                <td><?= $produto->id; ?></td>
-                <td><?= $produto->nome; ?></td>
+    <section class="card">
+        <h3 class="section-title">Pesquisar Produto</h3>
+        <form method="POST" action="index.php" class="search-box">
+            <input type="text" name="pesquisar" placeholder="ID ou Nome do produto..." required style="flex: 1; min-width: 200px;">
+            <select name="tipo">
+                <option value="id">Buscar por ID</option>
+                <option value="nome" selected>Buscar por Nome</option>
+            </select>
+            <button class="btn btn-primary">Pesquisar</button>
+        </form>
 
-            </tr>
-        <?php endforeach; ?>
-    <?php endif; ?>
+        <?php if($a) : ?>
+            <div class="table-container" style="margin-top: 20px; border: 2px solid var(--accent);">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($a as $produto) : ?>
+                            <tr>
+                                <td><strong>#<?= $produto->id; ?></strong></td>
+                                <td><?= $produto->nome; ?></td>
+                                <td>
+                                    <div class="btn-group" style="justify-content: center;">
+                                        <a href="atualizar.php?alterar=<?= $produto->id ?>" class="btn btn-edit">Alterar</a>
+                                        <a href="index.php?excluir=<?= $produto->id ?>" onclick="return confirm('Excluir este produto?')" class="btn btn-delete">Excluir</a>
+                                        <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn btn-view">Ver</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: center; margin-top: 10px;"><a href="index.php" style="color: var(--accent);">Limpar pesquisa</a></p>
+        <?php endif; ?>
+    </section>
 
-</table>
-
-<table>
-    <tr>
-        <td>ID</td>
-        <td>Nome</td>
-        <td>Descrição</td>
-        <td>Quantidade</td>
-        <td>Preço</td>
-        <td>Imagem</td>
-    </tr>
-    <?php if($produtos) : ?>
-        <?php foreach($produtos as $produto) : ?>
-            <tr>
-                <td><?php echo $produto->id;?></td>
-                <td><?php echo $produto->nome;?></td>
-                <td><?php echo $produto->descricao;?></td>
-                <td><?php echo $produto->quantidade;?></td>
-                <td><?php echo $produto->preco;?></td>
-
-
-            <td>
-                <?php if(is_null($produto->imagem)): ?>
-                    <img style="width: 20%;" src="imagens/img_fail.jpg"> <!-- ✅ fallback -->
-                <?php else: ?>
-                    <img style="width: 20%;" src="uploads/<?= $produto->imagem ?>"> <!-- ✅ tag fechada -->
-
-                <?php endif; ?>
-            </td>
-                <td><a href="atualizar.php?alterar=<?= $produto->id ?>">Alterar</a></td>
-                <td><a href="index.php?excluir=<?= $produto->id ?>">Excluir</a></td>
-                <td><a href="ver.produtos.php?id=<?= $produto->id ?>">Visualizar</a></td>
-
-            </tr>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</table>
+    <section class="card">
+        <h2 class="section-title">Catálogo Completo</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Produto</th>
+                        <th>Info</th>
+                        <th>Estoque</th>
+                        <th>Preço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if($produtos) : ?>
+                        <?php foreach($produtos as $produto) : ?>
+                            <tr>
+                                <td><strong>#<?= $produto->id;?></strong></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <?php if(empty($produto->imagem)): ?>
+                                            <img class="product-img" src="imagens/img_fail.jpg">
+                                        <?php else: ?>
+                                            <img class="product-img" src="uploads/<?= $produto->imagem ?>">
+                                        <?php endif; ?>
+                                        <strong><?= $produto->nome;?></strong>
+                                    </div>
+                                </td>
+                                <td><small style="color: #64748b;"><?= mb_strimwidth($produto->descricao, 0, 40, "..."); ?></small></td>
+                                <td><?= $produto->quantidade;?> un.</td>
+                                <td><strong>R$ <?= number_format($produto->preco, 2, ',', '.');?></strong></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <?php if($funcao === 'gerente' || $funcao === 'técnico em eletrônica'): ?>
+                                            <a href="atualizar.php?alterar=<?= $produto->id ?>" class="btn btn-edit" title="Editar">Alterar</a>
+                                            <a href="index.php?excluir=<?= $produto->id ?>" onclick="return confirm('Deseja excluir este produto?')" class="btn btn-delete" title="Excluir">Excluir</a>
+                                        <?php endif; ?>
+                                        <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn btn-view">Ver Detalhes</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="6" style="text-align: center; padding: 40px;">Nenhum produto encontrado.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 
 </body>
 </html>
