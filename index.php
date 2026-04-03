@@ -25,10 +25,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
 if($_SERVER["REQUEST_METHOD"] === "GET"){
     if(isset($_GET["excluir"])){
-        if (isset($_SESSION['funcao']) && strtolower($_SESSION['funcao']) === 'gerente') {
+        $funcao_user = strtolower($_SESSION['funcao'] ?? '');
+        if ($funcao_user === 'gerente' || $funcao_user === 'técnico em eletrônica') {
             $a = $controller->excluirProduto($_GET["excluir"]);
         } else {
-            echo "<script>alert('Ação restrita apenas para gerentes.');</script>";
+            echo "<script>alert('Ação restrita apenas para gerentes e técnicos.');</script>";
         }
     }
 }
@@ -169,11 +170,13 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                                 <td><strong>#<?= $produto->id;?></strong></td>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 12px;">
-                                        <?php if(empty($produto->imagem)): ?>
-                                            <img class="product-img" src="imagens/img_fail.jpg">
-                                        <?php else: ?>
-                                            <img class="product-img" src="uploads/<?= $produto->imagem ?>">
-                                        <?php endif; ?>
+                                <?php 
+                                    $img_src = "imagens/img_fail.jpg";
+                                    if(!empty($produto->imagem) && file_exists("uploads/" . $produto->imagem)) {
+                                        $img_src = "uploads/" . $produto->imagem;
+                                    }
+                                ?>
+                                <img class="product-img" src="<?= $img_src ?>">
                                         <strong><?= $produto->nome;?></strong>
                                     </div>
                                 </td>

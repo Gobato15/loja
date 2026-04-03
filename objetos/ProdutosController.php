@@ -120,13 +120,30 @@ Class ProdutosController {
                 }
 
                 public
-                function atualizarProduto($dados)
+                function atualizarProduto($dados, $arquivo)
                 {
+                    $produto_atual = $this->localizarProduto($dados["id"]);
+
+                    $temArquivo = isset($arquivo['name']['fileToUpload'])
+                        && $arquivo['name']['fileToUpload']!==""
+                        && isset($arquivo['error']['fileToUpload'])
+                        && $arquivo['error']['fileToUpload'] === UPLOAD_ERR_OK;
+
+                    if ($temArquivo) {
+                        if (!$this->upload($arquivo)) {
+                            return false;
+                        }
+                        // O método upload() já seta $this->img_name no sucesso
+                    } else {
+                        $this->img_name = $produto_atual->imagem;
+                    }
+
                     $this->produto->id = $dados["id"];
                     $this->produto->nome = $dados["nome"];
                     $this->produto->descricao = $dados["descricao"];
                     $this->produto->quantidade = $dados["quantidade"];
                     $this->produto->preco = $dados["preco"];
+                    $this->produto->img = $this->img_name;
 
                     if ($this->produto->atualizar()) {
                         header("location:index.php");
