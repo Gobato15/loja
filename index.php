@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-// Barreira de autenticação: se não houver usuário logado, redireciona para login.php
-if (!isset($_SESSION['usuario'])) {
-    header("Location: login.php");
-    exit();
-}
 include_once"objetos/ProdutosController.php";
 
 $controller = new ProdutosController();
@@ -82,17 +77,26 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
 
 <div class="container">
     <header>
-        <h1>Loja de Informática</h1>
-        
-        <?php if(isset($_SESSION['usuario'])): ?>
-            <div class="user-info">
-                <div>
-                    👤 Usuário: <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
-                    | Cargo: <span class="badge"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
-                </div>
-                <a href="logout.php" class="btn btn-view" style="padding: 5px 12px;">Sair (Logout)</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <h1>Loja de Informática</h1>
+            
+            <div class="auth-box">
+                <?php if(isset($_SESSION['usuario'])): ?>
+                    <div class="user-info">
+                        <div>
+                            👤 <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
+                            <span class="badge" style="margin-left: 5px;"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
+                        </div>
+                        <a href="logout.php" class="btn btn-view" style="padding: 5px 12px; font-size: 0.8rem;">Sair</a>
+                    </div>
+                <?php else: ?>
+                    <div class="btn-group">
+                        <a href="login.php" class="btn btn-primary" style="padding: 10px 25px;">Login Cliente</a>
+                        <a href="loginfuncionario.php" class="btn btn-view" style="padding: 10px 15px; font-size: 0.8rem;">Área Colaborador</a>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
+        </div>
     </header>
 
     <div class="nav-links">
