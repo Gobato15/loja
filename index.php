@@ -107,99 +107,73 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
         <?php endif; ?>
     </div>
 
-    <section class="card">
-        <h3 class="section-title">Pesquisar Produto</h3>
-        <form method="POST" action="index.php" class="search-box">
-            <input type="text" name="pesquisar" placeholder="ID ou Nome do produto..." required style="flex: 1; min-width: 200px;">
-            <select name="tipo">
-                <option value="id">Buscar por ID</option>
-                <option value="nome" selected>Buscar por Nome</option>
-            </select>
-            <button class="btn btn-primary">Pesquisar</button>
-        </form>
-
-        <?php if($a) : ?>
-            <div class="table-container" style="margin-top: 20px; border: 2px solid var(--accent);">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th style="text-align: center;">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($a as $produto) : ?>
-                            <tr>
-                                <td><strong>#<?= $produto->id; ?></strong></td>
-                                <td><?= $produto->nome; ?></td>
-                                <td>
-                                    <div class="btn-group" style="justify-content: center;">
-                                        <a href="atualizar.php?alterar=<?= $produto->id ?>" class="btn btn-edit">Alterar</a>
-                                        <a href="index.php?excluir=<?= $produto->id ?>" onclick="return confirm('Excluir este produto?')" class="btn btn-delete">Excluir</a>
-                                        <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn btn-view">Ver</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 0;">Nossos Produtos</h2>
+            <div class="search-box" style="margin-bottom: 0;">
+                <form method="POST" action="index.php" style="display: flex; gap: 10px;">
+                    <input type="text" name="pesquisar" placeholder="Buscar produto..." required style="padding: 8px 15px;">
+                    <input type="hidden" name="tipo" value="nome">
+                    <button class="btn btn-primary" style="padding: 8px 16px;">🔍</button>
+                </form>
             </div>
-            <p style="text-align: center; margin-top: 10px;"><a href="index.php" style="color: var(--accent);">Limpar pesquisa</a></p>
-        <?php endif; ?>
-    </section>
-
-    <section class="card">
-        <h2 class="section-title">Catálogo Completo</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Produto</th>
-                        <th>Info</th>
-                        <th>Estoque</th>
-                        <th>Preço</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if($produtos) : ?>
-                        <?php foreach($produtos as $produto) : ?>
-                            <tr>
-                                <td><strong>#<?= $produto->id;?></strong></td>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                <?php 
-                                    $img_src = "imagens/img_fail.jpg";
-                                    if(!empty($produto->imagem) && file_exists("uploads/" . $produto->imagem)) {
-                                        $img_src = "uploads/" . $produto->imagem;
-                                    }
-                                ?>
-                                <img class="product-img" src="<?= $img_src ?>">
-                                        <strong><?= $produto->nome;?></strong>
-                                    </div>
-                                </td>
-                                <td><small style="color: #64748b;"><?= mb_strimwidth($produto->descricao, 0, 40, "..."); ?></small></td>
-                                <td><?= $produto->quantidade;?> un.</td>
-                                <td><strong>R$ <?= number_format($produto->preco, 2, ',', '.');?></strong></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <?php if($funcao === 'gerente' || $funcao === 'técnico em eletrônica'): ?>
-                                            <a href="atualizar.php?alterar=<?= $produto->id ?>" class="btn btn-edit" title="Editar">Alterar</a>
-                                            <a href="index.php?excluir=<?= $produto->id ?>" onclick="return confirm('Deseja excluir este produto?')" class="btn btn-delete" title="Excluir">Excluir</a>
-                                        <?php endif; ?>
-                                        <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn btn-view">Ver Detalhes</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr><td colspan="6" style="text-align: center; padding: 40px;">Nenhum produto encontrado.</td></tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
         </div>
+
+        <?php if($a || $produtos) : 
+            $display_list = $a ? $a : $produtos;
+        ?>
+            <div class="catalog-grid">
+                <?php foreach($display_list as $produto) : ?>
+                    <div class="product-card">
+                        <?php 
+                            $img_src = "imagens/img_fail.jpg";
+                            if(!empty($produto->imagem) && file_exists("uploads/" . $produto->imagem)) {
+                                $img_src = "uploads/" . $produto->imagem;
+                            }
+                        ?>
+                        
+                        <div class="product-card-img-container">
+                            <img src="<?= $img_src ?>" alt="<?= htmlspecialchars($produto->nome); ?>" class="product-card-img">
+                        </div>
+
+                        <?php if($produto->quantidade > 0): ?>
+                            <span class="badge-stock">Em estoque (<?= $produto->quantidade ?>)</span>
+                        <?php else: ?>
+                            <span class="badge-stock" style="color: var(--danger);">Esgotado</span>
+                        <?php endif; ?>
+
+                        <?php if($funcao === 'gerente' || $funcao === 'técnico em eletrônica'): ?>
+                            <div class="admin-actions">
+                                <a href="atualizar.php?alterar=<?= $produto->id ?>" class="btn btn-edit" style="padding: 5px 10px; font-size: 0.7rem;" title="Editar">✏️</a>
+                                <a href="index.php?excluir=<?= $produto->id ?>" onclick="return confirm('Excluir este produto?')" class="btn btn-delete" style="padding: 5px 10px; font-size: 0.7rem;" title="Excluir">🗑️</a>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="product-card-content">
+                            <h3 class="product-card-title"><?= htmlspecialchars($produto->nome); ?></h3>
+                            <p class="product-card-description"><?= htmlspecialchars($produto->descricao); ?></p>
+                            
+                            <div class="product-card-footer">
+                                <div class="product-card-price">
+                                    <small>R$</small> <?= number_format($produto->preco, 2, ',', '.'); ?>
+                                </div>
+                                <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn-buy">Comprar</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <?php if($a): ?>
+                <p style="text-align: center; margin-top: 30px;"><a href="index.php" class="btn btn-view">Ver Catálogo Completo</a></p>
+            <?php endif; ?>
+
+        <?php else: ?>
+            <div class="card" style="text-align: center; padding: 60px;">
+                <p style="font-size: 1.2rem; color: #64748b;">Nenhum produto encontrado.</p>
+                <a href="index.php" class="btn btn-primary" style="margin-top: 20px;">Limpar Pesquisa</a>
+            </div>
+        <?php endif; ?>
     </section>
 </div>
 
