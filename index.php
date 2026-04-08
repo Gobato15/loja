@@ -106,7 +106,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                     </div>
                 <?php endif; ?>
                 
-                <a href="carrinho.php" class="btn btn-primary" style="position: relative; padding: 10px 20px; background: var(--secondary);">
+                <a href="carrinho.php" class="btn btn-primary header-cart" style="position: relative; padding: 12px 25px; border-radius: 12px; font-weight: 600;">
                     🛒 Carrinho
                     <?php 
                         $cart_count = 0;
@@ -115,12 +115,20 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                         }
                     ?>
                     <?php if($cart_count > 0): ?>
-                        <span style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; border: 2px solid white;"><?= $cart_count ?></span>
+                        <span style="position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; min-width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
             </div>
         </div>
     </header>
+
+    <!-- Floating Cart for high visibility -->
+    <a href="carrinho.php" class="cart-floating">
+        🛒
+        <?php if($cart_count > 0): ?>
+            <span class="badge"><?= $cart_count ?></span>
+        <?php endif; ?>
+    </a>
 
     <div class="nav-links">
         <?php 
