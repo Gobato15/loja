@@ -14,7 +14,7 @@ if (empty($carrinho)) {
 }
 
 $total = calcularTotal();
-$usuario_id = $_SESSION['id'];
+$cliente_id = $_SESSION['id'];
 
 $db = new Database();
 $con = $db->conectar();
@@ -23,9 +23,9 @@ try {
     $con->beginTransaction();
 
     // 1. Inserir Pedido
-    $sql_pedido = "INSERT INTO pedidos (usuario_id, total, status) VALUES (:usuario_id, :total, 'Finalizado')";
+    $sql_pedido = "INSERT INTO pedidos (cliente_id, total, status) VALUES (:cliente_id, :total, 'Finalizado')";
     $stmt = $con->prepare($sql_pedido);
-    $stmt->bindParam(':usuario_id', $usuario_id);
+    $stmt->bindParam(':cliente_id', $cliente_id);
     $stmt->bindParam(':total', $total);
     $stmt->execute();
     

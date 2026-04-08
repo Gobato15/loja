@@ -8,15 +8,15 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 $pedido_id = $_GET['id'] ?? 0;
-$usuario_id = $_SESSION['id'];
+$cliente_id = $_SESSION['id'];
 $db = new Database();
 $con = $db->conectar();
 
 // Verificar se o pedido pertence ao usuário
-$sql_pedido = "SELECT * FROM pedidos WHERE id = :id AND usuario_id = :usuario_id";
+$sql_pedido = "SELECT * FROM pedidos WHERE id = :id AND cliente_id = :cliente_id";
 $stmt = $con->prepare($sql_pedido);
 $stmt->bindParam(':id', $pedido_id);
-$stmt->bindParam(':usuario_id', $usuario_id);
+$stmt->bindParam(':cliente_id', $cliente_id);
 $stmt->execute();
 $pedido = $stmt->fetch(PDO::FETCH_OBJ);
 

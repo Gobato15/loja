@@ -7,14 +7,14 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-$usuario_id = $_SESSION['id'];
+$cliente_id = $_SESSION['id'];
 $db = new Database();
 $con = $db->conectar();
 
 // Buscar todos os pedidos do usuário
-$sql = "SELECT * FROM pedidos WHERE usuario_id = :usuario_id ORDER BY data_pedido DESC";
+$sql = "SELECT * FROM pedidos WHERE cliente_id = :cliente_id ORDER BY data_pedido DESC";
 $stmt = $con->prepare($sql);
-$stmt->bindParam(':usuario_id', $usuario_id);
+$stmt->bindParam(':cliente_id', $cliente_id);
 $stmt->execute();
 $pedidos = $stmt->fetchAll(PDO::FETCH_OBJ);
 
