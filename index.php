@@ -101,7 +101,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                     </div>
                 <?php else: ?>
                     <div class="btn-group">
-                        <a href="login.php" class="btn btn-primary" style="padding: 10px 25px;">Login</a>
+                        <a href="login_cliente.php" class="btn btn-primary" style="padding: 10px 25px;">Login</a>
                         <a href="loginfuncionario.php" class="btn btn-view" style="padding: 10px 15px; font-size: 0.8rem;">Colaborador</a>
                     </div>
                 <?php endif; ?>
