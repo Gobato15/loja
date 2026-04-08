@@ -53,8 +53,10 @@ try {
 
     $con->commit();
     
-    // Limpar carrinho
+    // Limpar carrinho e frete
     limparCarrinho();
+    unset($_SESSION['frete']);
+    unset($_SESSION['cep']);
     
     $sucesso = true;
 } catch (Exception $e) {

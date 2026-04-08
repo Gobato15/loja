@@ -40,12 +40,36 @@ function limparCarrinho() {
 }
 
 function calcularTotal() {
-    $total = 0;
+    $subtotal = 0;
     if (isset($_SESSION['carrinho'])) {
         foreach ($_SESSION['carrinho'] as $item) {
-            $total += $item['preco'] * $item['quantidade'];
+            $subtotal += $item['preco'] * $item['quantidade'];
         }
     }
-    return $total;
+    $frete = $_SESSION['frete'] ?? 0;
+    return $subtotal + $frete;
+}
+
+function calcularFrete($cep) {
+    // Simulação de cálculo de frete
+    $digito = substr($cep, 0, 1);
+    switch ($digito) {
+        case '0':
+        case '1':
+            $valor = 15.00; // SP/Grande SP
+            break;
+        case '2':
+            $valor = 25.00; // RJ/ES
+            break;
+        case '3':
+            $valor = 22.00; // MG
+            break;
+        default:
+            $valor = 45.00; // Outras regiões
+            break;
+    }
+    $_SESSION['frete'] = $valor;
+    $_SESSION['cep'] = $cep;
+    return $valor;
 }
 ?>
