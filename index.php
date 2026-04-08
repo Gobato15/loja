@@ -113,19 +113,14 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                 <?php endif; ?>
                 
                 <a href="carrinho.php" class="header-cart-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <path d="M3 6h18"></path>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
-                    Carrinho
+                    <span style="margin-left: 2px;">Meu Carrinho</span>
                     <?php 
-                        $cart_count = 0;
-                        if(isset($_SESSION['carrinho'])) {
-                            foreach($_SESSION['carrinho'] as $item) { $cart_count += $item['quantidade']; }
-                        }
-                    ?>
-                    <?php if($cart_count > 0): ?>
+                        if($cart_count > 0): ?>
                         <span class="cart-badge"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
