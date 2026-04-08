@@ -203,7 +203,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                                     <input type="hidden" name="nome" value="<?= $produto->nome ?>">
                                     <input type="hidden" name="preco" value="<?= $produto->preco ?>">
                                     <input type="hidden" name="imagem" value="<?= $img_src ?>">
-                                    <button type="submit" name="add_to_cart" class="btn-buy" style="border: none; cursor: pointer;">Comprar</button>
+                                    <button type="submit" name="add_to_cart" class="btn-buy" style="border: none; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">🛒 Adicionar</button>
                                 </form>
                             </div>
                         </div>
