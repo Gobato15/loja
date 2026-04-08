@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["remover"])) {
         removerDoCarrinho($_POST["remover"]);
     }
-    if (isset($_POST["atualizar"])) {
+    if (isset($_POST["quantidade"]) && isset($_POST["produto_id"])) {
         atualizarQuantidade($_POST["produto_id"], $_POST["quantidade"]);
     }
     if (isset($_POST["calcular_cep"])) {
@@ -71,8 +71,8 @@ $total = $subtotal + $frete;
                                 <td>
                                     <form method="POST" style="display: flex; gap: 5px; align-items: center;">
                                         <input type="hidden" name="produto_id" value="<?= $id ?>">
-                                        <input type="number" name="quantidade" value="<?= $item['quantidade'] ?>" min="1" style="width: 60px; padding: 5px;">
-                                        <button type="submit" name="atualizar" class="btn btn-primary" style="padding: 5px 10px;">✔</button>
+                                        <input type="number" name="quantidade" value="<?= $item['quantidade'] ?>" min="1" style="width: 60px; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: 600; text-align: center;" onchange="this.form.submit()">
+                                        <noscript><button type="submit" class="btn btn-primary" style="padding: 5px 10px;">✔</button></noscript>
                                     </form>
                                 </td>
                                 <td><strong>R$ <?= number_format((float)$item['preco'] * (int)$item['quantidade'], 2, ',', '.') ?></strong></td>

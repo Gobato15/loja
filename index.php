@@ -167,7 +167,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                 <?php foreach($display_list as $produto) : ?>
                     <div class="product-card">
                         <?php 
-                            $img_src = "imagens/img_fail.jpg";
+                            $img_src = "imagens/placeholder.png";
                             if(!empty($produto->imagem) && file_exists("uploads/" . $produto->imagem)) {
                                 $img_src = "uploads/" . $produto->imagem;
                             }

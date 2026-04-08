@@ -56,7 +56,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])){
         <div class="product-detail">
             <div class="detail-image">
                 <?php 
-                    $img_src = "imagens/img_fail.jpg";
+                    $img_src = "imagens/placeholder.png";
                     if(!empty($a->imagem) && file_exists("uploads/" . $a->imagem)) {
                         $img_src = "uploads/" . $a->imagem;
                     }
