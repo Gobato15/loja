@@ -83,44 +83,44 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
 <body>
 
 <div class="container">
-    <header>
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <h1>Loja de Informática</h1>
+    <header style="padding: 1rem 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+            <h1 style="margin-bottom: 0; font-size: 1.6rem;">Loja de Informática</h1>
             
-            <div class="auth-box">
+            <div style="display: flex; align-items: center; gap: 20px;">
                 <?php if(isset($_SESSION['usuario'])): ?>
-                    <div class="user-info">
-                        <div style="display: flex; gap: 15px; align-items: center;">
-                            <?php if(!empty($_SESSION['imagem_usuario']) && file_exists("uploads/" . $_SESSION['imagem_usuario'])): ?>
-                                <img src="uploads/<?= $_SESSION['imagem_usuario'] ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-                            <?php else: ?>
-                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid #cbd5e1;">👤</div>
-                            <?php endif; ?>
-                            
-                            <div>
-                                <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
-                                <span class="badge" style="margin-left: 5px;"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
-                            </div>
-                            <a href="meus_pedidos.php" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;">📦 Meus Pedidos</a>
+                    <div style="display: flex; gap: 15px; align-items: center; background: #f8fafc; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border);">
+                        <?php if(!empty($_SESSION['imagem_usuario']) && file_exists("uploads/" . $_SESSION['imagem_usuario'])): ?>
+                            <img src="uploads/<?= $_SESSION['imagem_usuario'] ?>" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                        <?php else: ?>
+                            <span style="font-size: 1.2rem;">👤</span>
+                        <?php endif; ?>
+                        
+                        <div style="font-size: 0.9rem;">
+                            <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong>
                         </div>
-                        <a href="logout.php" class="btn btn-view" style="padding: 5px 12px; font-size: 0.8rem;">Sair</a>
+                        <a href="logout.php" title="Sair" style="text-decoration: none; font-size: 0.8rem; color: #64748b;">🚪</a>
                     </div>
                 <?php else: ?>
                     <div class="btn-group">
-                        <a href="login_cliente.php" class="btn btn-primary" style="padding: 10px 25px;">Login</a>
-                        <a href="loginfuncionario.php" class="btn btn-view" style="padding: 10px 15px; font-size: 0.8rem;">Colaborador</a>
+                        <a href="login_cliente.php" class="btn btn-primary" style="padding: 8px 20px;">Login</a>
+                        <a href="loginfuncionario.php" class="btn btn-view" style="padding: 8px 12px; font-size: 0.75rem;">Staff</a>
                     </div>
                 <?php endif; ?>
-                
+                <?php 
+                    $cart_count = 0;
+                    if(isset($_SESSION['carrinho'])) {
+                        foreach($_SESSION['carrinho'] as $item) { $cart_count += (int)$item['quantidade']; }
+                    }
+                ?>
                 <a href="carrinho.php" class="header-cart-btn">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                         <path d="M3 6h18"></path>
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
                     <span style="margin-left: 2px;">Meu Carrinho</span>
-                    <?php 
-                        if($cart_count > 0): ?>
+                    <?php if($cart_count > 0): ?>
                         <span class="cart-badge"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
