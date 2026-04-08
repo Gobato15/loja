@@ -2,6 +2,7 @@
 session_start();
 
 include_once"objetos/ProdutosController.php";
+include_once"carrinho_helper.php";
 
 $controller = new ProdutosController();
 $produtos = $controller->index();
@@ -13,7 +14,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         $valor = $_POST["pesquisar"];
         $tipo = $_POST["tipo"];
         $a = $controller->pesquisaProduto($_POST["pesquisar"], $_POST["tipo"]);
-            }
+    }
+    
+    if(isset($_POST["add_to_cart"])){
+        adicionarAoCarrinho($_POST["id"], $_POST["nome"], $_POST["preco"], $_POST["imagem"]);
+        header("Location: carrinho.php");
+        exit();
+    }
 
 
     }
@@ -83,18 +90,34 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
             <div class="auth-box">
                 <?php if(isset($_SESSION['usuario'])): ?>
                     <div class="user-info">
-                        <div>
-                            👤 <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
-                            <span class="badge" style="margin-left: 5px;"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <div>
+                                👤 <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
+                                <span class="badge" style="margin-left: 5px;"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
+                            </div>
+                            <a href="meus_pedidos.php" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;">📦 Meus Pedidos</a>
                         </div>
                         <a href="logout.php" class="btn btn-view" style="padding: 5px 12px; font-size: 0.8rem;">Sair</a>
                     </div>
                 <?php else: ?>
                     <div class="btn-group">
-                        <a href="login.php" class="btn btn-primary" style="padding: 10px 25px;">Login Cliente</a>
-                        <a href="loginfuncionario.php" class="btn btn-view" style="padding: 10px 15px; font-size: 0.8rem;">Área Colaborador</a>
+                        <a href="login.php" class="btn btn-primary" style="padding: 10px 25px;">Login</a>
+                        <a href="loginfuncionario.php" class="btn btn-view" style="padding: 10px 15px; font-size: 0.8rem;">Colaborador</a>
                     </div>
                 <?php endif; ?>
+                
+                <a href="carrinho.php" class="btn btn-primary" style="position: relative; padding: 10px 20px; background: var(--secondary);">
+                    🛒 Carrinho
+                    <?php 
+                        $cart_count = 0;
+                        if(isset($_SESSION['carrinho'])) {
+                            foreach($_SESSION['carrinho'] as $item) { $cart_count += $item['quantidade']; }
+                        }
+                    ?>
+                    <?php if($cart_count > 0): ?>
+                        <span style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; border: 2px solid white;"><?= $cart_count ?></span>
+                    <?php endif; ?>
+                </a>
             </div>
         </div>
     </header>
@@ -161,7 +184,13 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                                 <div class="product-card-price">
                                     <small>R$</small> <?= number_format($produto->preco, 2, ',', '.'); ?>
                                 </div>
-                                <a href="ver.produtos.php?id=<?= $produto->id ?>" class="btn-buy">Comprar</a>
+                                <form method="POST" action="index.php">
+                                    <input type="hidden" name="id" value="<?= $produto->id ?>">
+                                    <input type="hidden" name="nome" value="<?= $produto->nome ?>">
+                                    <input type="hidden" name="preco" value="<?= $produto->preco ?>">
+                                    <input type="hidden" name="imagem" value="<?= $img_src ?>">
+                                    <button type="submit" name="add_to_cart" class="btn-buy" style="border: none; cursor: pointer;">Comprar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
