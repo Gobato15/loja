@@ -112,8 +112,13 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                     </div>
                 <?php endif; ?>
                 
-                <a href="carrinho.php" class="btn btn-primary header-cart" style="position: relative; padding: 12px 25px; border-radius: 12px; font-weight: 600;">
-                    🛒 Carrinho
+                <a href="carrinho.php" class="header-cart-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Carrinho
                     <?php 
                         $cart_count = 0;
                         if(isset($_SESSION['carrinho'])) {
@@ -121,7 +126,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                         }
                     ?>
                     <?php if($cart_count > 0): ?>
-                        <span style="position: absolute; top: -10px; right: -10px; background: #ef4444; color: white; border-radius: 50%; min-width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"><?= $cart_count ?></span>
+                        <span class="cart-badge"><?= $cart_count ?></span>
                     <?php endif; ?>
                 </a>
             </div>
@@ -203,7 +208,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                                     <input type="hidden" name="nome" value="<?= $produto->nome ?>">
                                     <input type="hidden" name="preco" value="<?= $produto->preco ?>">
                                     <input type="hidden" name="imagem" value="<?= $img_src ?>">
-                                    <button type="submit" name="add_to_cart" class="btn-buy" style="border: none; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">🛒 Adicionar</button>
+                                    <button type="submit" name="add_to_cart" class="btn-buy" style="border: none; cursor: pointer;">Comprar</button>
                                 </form>
                             </div>
                         </div>
