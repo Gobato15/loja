@@ -8,6 +8,7 @@ Class cliente {
     public $cpf;
     public $endereco;
     public $telefone;
+    public $imagem;
     public $bd;
 
     public function __construct($bd){
@@ -15,8 +16,8 @@ Class cliente {
     }
 
     public function cadastrar(){
-        $sql = "INSERT INTO clientes (nome, email, senha, cpf, endereco, telefone) 
-                VALUES(:nome, :email, :senha, :cpf, :endereco, :telefone)";
+        $sql = "INSERT INTO clientes (nome, email, senha, cpf, endereco, telefone, imagem) 
+                VALUES(:nome, :email, :senha, :cpf, :endereco, :telefone, :imagem)";
 
         $stmt = $this->bd->prepare($sql);
         $stmt->bindParam(':nome', $this->nome);
@@ -25,6 +26,7 @@ Class cliente {
         $stmt->bindParam(':cpf', $this->cpf);
         $stmt->bindParam(':endereco', $this->endereco);
         $stmt->bindParam(':telefone', $this->telefone);
+        $stmt->bindParam(':imagem', $this->imagem);
 
         return $stmt->execute();
     }

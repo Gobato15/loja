@@ -12,13 +12,31 @@ Class ClienteController {
         $this->cliente = new cliente($this->bd);
     }
 
-    public function cadastrar($dados) {
+    public function upload($arquivo) {
+        $target_dir = "uploads/";
+        $imageFileType = strtolower(pathinfo($arquivo["name"], PATHINFO_EXTENSION));
+        $random_name = uniqid('client_', true) . '.' . $imageFileType;
+        $upload_file = $target_dir . $random_name;
+        
+        if (move_uploaded_file($arquivo['tmp_name'], $upload_file)) {
+            return $random_name;
+        }
+        return null;
+    }
+
+    public function cadastrar($dados, $arquivo = null) {
         $this->cliente->nome = $dados['nome'];
         $this->cliente->email = $dados['email'];
         $this->cliente->senha = password_hash($dados['senha'], PASSWORD_DEFAULT);
         $this->cliente->cpf = $dados['cpf'];
         $this->cliente->endereco = $dados['endereco'];
         $this->cliente->telefone = $dados['telefone'];
+        
+        if($arquivo && $arquivo['error'] === UPLOAD_ERR_OK){
+            $this->cliente->imagem = $this->upload($arquivo);
+        } else {
+            $this->cliente->imagem = null;
+        }
 
         if($this->cliente->cadastrar()){
             header("Location: login_cliente.php?msg=sucesso");
@@ -38,8 +56,9 @@ Class ClienteController {
             $_SESSION['id'] = $dados->id;
             $_SESSION['usuario'] = $dados->email;
             $_SESSION['nome_usuario'] = $dados->nome;
+            $_SESSION['imagem_usuario'] = $dados->imagem;
             $_SESSION['tipo_usuario'] = 'cliente';
-            $_SESSION['funcao'] = 'cliente'; // Para compatibilidade com código existente
+            $_SESSION['funcao'] = 'cliente';
 
             header("Location: index.php");
             exit();

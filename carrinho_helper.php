@@ -10,9 +10,9 @@ function adicionarAoCarrinho($id, $nome, $preco, $imagem) {
         $_SESSION['carrinho'][$id]['quantidade']++;
     } else {
         $_SESSION['carrinho'][$id] = [
-            'id' => $id,
+            'id' => (int)$id,
             'nome' => $nome,
-            'preco' => $preco,
+            'preco' => (float)$preco,
             'imagem' => $imagem,
             'quantidade' => 1
         ];
@@ -27,6 +27,7 @@ function removerDoCarrinho($id) {
 
 function atualizarQuantidade($id, $qtd) {
     if (isset($_SESSION['carrinho'][$id])) {
+        $qtd = (int)$qtd;
         if ($qtd > 0) {
             $_SESSION['carrinho'][$id]['quantidade'] = $qtd;
         } else {

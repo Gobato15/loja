@@ -15,7 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 $carrinho = $_SESSION['carrinho'] ?? [];
 $subtotal = 0;
-foreach($carrinho as $item) { $subtotal += $item['preco'] * $item['quantidade']; }
+foreach($carrinho as $item) { 
+    $subtotal += (float)$item['preco'] * (int)$item['quantidade']; 
+}
 $frete = $_SESSION['frete'] ?? 0;
 $total = $subtotal + $frete;
 ?>
@@ -73,7 +75,7 @@ $total = $subtotal + $frete;
                                         <button type="submit" name="atualizar" class="btn btn-primary" style="padding: 5px 10px;">✔</button>
                                     </form>
                                 </td>
-                                <td><strong>R$ <?= number_format($item['preco'] * $item['quantidade'], 2, ',', '.') ?></strong></td>
+                                <td><strong>R$ <?= number_format((float)$item['preco'] * (int)$item['quantidade'], 2, ',', '.') ?></strong></td>
                                 <td>
                                     <form method="POST">
                                         <button type="submit" name="remover" value="<?= $id ?>" class="btn btn-delete" style="padding: 5px 10px;">Remover</button>

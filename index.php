@@ -91,8 +91,14 @@ if($_SERVER["REQUEST_METHOD"] === "GET"){
                 <?php if(isset($_SESSION['usuario'])): ?>
                     <div class="user-info">
                         <div style="display: flex; gap: 15px; align-items: center;">
+                            <?php if(!empty($_SESSION['imagem_usuario']) && file_exists("uploads/" . $_SESSION['imagem_usuario'])): ?>
+                                <img src="uploads/<?= $_SESSION['imagem_usuario'] ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                            <?php else: ?>
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 2px solid #cbd5e1;">👤</div>
+                            <?php endif; ?>
+                            
                             <div>
-                                👤 <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
+                                <strong><?= htmlspecialchars($_SESSION['nome_usuario']); ?></strong> 
                                 <span class="badge" style="margin-left: 5px;"><?= htmlspecialchars(ucfirst($_SESSION['funcao'])); ?></span>
                             </div>
                             <a href="meus_pedidos.php" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;">📦 Meus Pedidos</a>

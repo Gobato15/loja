@@ -4,7 +4,7 @@ include_once "objetos/ClienteController.php";
 $erro = null;
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $controller = new ClienteController();
-    $erro = $controller->cadastrar($_POST);
+    $erro = $controller->cadastrar($_POST, $_FILES['imagem']);
 }
 ?>
 
@@ -37,7 +37,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         </div>
     <?php endif; ?>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Minha Foto de Perfil</label>
+            <input type="file" name="imagem" accept="image/*" style="width: 100%; padding: 5px; border: 1px dashed #cbd5e1; border-radius: 8px;">
+        </div>
+
         <div style="margin-bottom: 1rem;">
             <label style="display: block; margin-bottom: 5px; font-weight: 600;">Nome Completo</label>
             <input type="text" name="nome" required style="width: 100%;">
